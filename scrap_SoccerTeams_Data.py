@@ -1,3 +1,6 @@
+# This scripts scraps fbref web page to get stats from B5L-UEFA
+# Big 5 Ligue of UEFA: La Liga, Premier, Bundes, Ligue-1 and Serie A
+# install requeriments (pip install -r requirements.txt )
 
 import sys
 import os
@@ -18,11 +21,31 @@ from bs4 import BeautifulSoup
 if __name__ == '__main__':
     
 
-    links = ['https://fbref.com/en/comps/12/2021-2022/2021-2022-La-Liga-Stats',
-             'https://fbref.com/en/comps/20/2021-2022/2021-2022-Bundesliga-Stats',
-             'https://fbref.com/en/comps/9/2021-2022/2021-2022-Premier-League-Stats']
-#             'https://fbref.com/en/comps/13/2021-2022/2021-2022-Ligue-1-Stats'      
-#            'https://fbref.com/en/comps/11/2021-2022/2021-2022-Serie-A-Stats',  ]
+    links = ['https://fbref.com/en/comps/12/2017-2018/2017-2018-La-Liga-Stats',
+             'https://fbref.com/en/comps/12/2018-2019/2018-2019-La-Liga-Stats',
+             'https://fbref.com/en/comps/12/2019-2020/2019-2020-La-Liga-Stats',
+             'https://fbref.com/en/comps/12/2020-2021/2020-2021-La-Liga-Stats',
+             'https://fbref.com/en/comps/12/2021-2022/2021-2022-La-Liga-Stats',
+             'https://fbref.com/en/comps/9/2017-2018/2017-2018-Premier-League-Stats',
+             'https://fbref.com/en/comps/9/2018-2019/2018-2019-Premier-League-Stats',
+             'https://fbref.com/en/comps/9/2019-2020/2019-2020-Premier-League-Stats',
+             'https://fbref.com/en/comps/9/2020-2021/2020-2021-Premier-League-Stats',
+             'https://fbref.com/en/comps/9/2021-2022/2021-2022-Premier-League-Stats',
+             'https://fbref.com/en/comps/13/2017-2018/2017-2018-Ligue-1-Stats',
+             'https://fbref.com/en/comps/13/2018-2019/2018-2019-Ligue-1-Stats',
+             'https://fbref.com/en/comps/13/2019-2020/2019-2020-Ligue-1-Stats',
+             'https://fbref.com/en/comps/13/2020-2021/2020-2021-Ligue-1-Stats',
+             'https://fbref.com/en/comps/13/2021-2022/2021-2022-Ligue-1-Stats',
+             'https://fbref.com/en/comps/11/2017-2018/2017-2018-Serie-A-Stats',
+             'https://fbref.com/en/comps/11/2018-2019/2018-2019-Serie-A-Stats',
+             'https://fbref.com/en/comps/11/2019-2020/2019-2020-Serie-A-Stats',
+             'https://fbref.com/en/comps/11/2020-2021/2020-2021-Serie-A-Stats',
+             'https://fbref.com/en/comps/11/2021-2022/2021-2022-Serie-A-Stats',
+             'https://fbref.com/en/comps/20/2017-2018/2017-2018-Bundesliga-Stats',
+             'https://fbref.com/en/comps/20/2018-2019/2018-2019-Bundesliga-Stats',
+             'https://fbref.com/en/comps/20/2019-2020/2019-2020-Bundesliga-Stats',
+             'https://fbref.com/en/comps/20/2020-2021/2020-2021-Bundesliga-Stats',
+             'https://fbref.com/en/comps/20/2021-2022/2021-2022-Bundesliga-Stats']
 
     stats = ['stats_standard_',
              'stats_shooting_',
@@ -80,16 +103,4 @@ if __name__ == '__main__':
                 df = pd.read_html('https://fbref.com/'+href,header=1,attrs={'id': stat + link.split('/')[5]})
                 df[0].to_csv(path_dir[:-1] + "\\"  + href.split('/')[5] +"_" + stat +  ".csv" )
             print('... listo')
-
-   
         
-
-
-
-
-
-
-    
-
-       
-
