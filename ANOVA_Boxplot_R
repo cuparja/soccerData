@@ -1,0 +1,30 @@
+library(readxl)
+library(ggplot2)
+library(reshape2)
+
+datos <- read_excel("C:\\Users\\cubo8\\OneDrive\\Escritorio\\MÁSTER DE BIG DATA\\TFM\\DATOS\\Bundesliga\\Bundesliga_Grupos.xlsx", col_names = TRUE)
+
+num_grupos <- ncol(datos) %/% 3
+
+for(i in 1:num_grupos){
+  # Identificamos las columnas correspondientes a cada grupo
+  col_inicio <- (i - 1) * 3 + 1
+  col_fin <- i * 3
+  
+  # Creamos el boxplot y se le asigna el título
+  titulo_boxplot <- sub('"', '', gsub("_.*", "", colnames(datos)[col_fin]))
+  boxplot(datos[, col_inicio:col_fin], 
+          main = titulo_boxplot, 
+          ylab = "Valor",
+          names = c("G1", "G2", "G3"))
+  
+  # Combinamos los datos en un solo conjunto de datos
+  datos_combinados <- melt(datos[, c(col_inicio:col_fin)], id.vars = NULL, variable.name = "grupo", value.name = "valor")
+  
+  # Realizamos el Análisis de Varianza
+  modelo_anova <- aov(valor ~ grupo, data = datos_combinados)
+  
+  # Mostramos el resumen del modelo con el título del boxplot
+  print(paste("Anova para", titulo_boxplot))
+  print(summary(modelo_anova))
+}
