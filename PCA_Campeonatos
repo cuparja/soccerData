@@ -1,0 +1,95 @@
+import pandas as pd
+import numpy as np
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+# Cargamos los datos desde un archivo Excel
+df = pd.read_excel('PCA_Bundesliga.xlsx')  #Se usan los datos para los distintos campeonatos (Bundesliga, LaLiga, Premier, Serie A y Ligue 1)
+
+# Separamos la variable categórica del resto de las variables numéricas
+numeric_cols = df.columns[1:]  # Excluimos la primera columna
+X = df[numeric_cols].values
+
+# Aplicamos una PCA con diferentes números de componentes
+n_components = range(1, len(numeric_cols))
+variances = []
+for n in n_components:
+    pca = PCA(n_components=n)
+    pca.fit(X)
+    variances.append(pca.explained_variance_ratio_.sum())
+
+# Graficamos la varianza explicada en función del número de componentes
+plt.plot(n_components, variances, 'ko-')
+plt.xlabel('Número de componentes')
+plt.ylabel('Varianza explicada')
+plt.title('Método del codo para determinar el número óptimo de componentes')
+plt.show()
+
+# Dividir en variable categórica y variables numéricas
+cat_var = df.iloc[:, 0].values
+num_vars = df.iloc[:, 1:].values
+
+# Normalizar los datos
+scaler = StandardScaler()
+num_vars_scaled = scaler.fit_transform(num_vars)
+
+# Realizar la PCA con 4 componentes principales según el método del codo
+pca = PCA(n_components=4)
+num_vars_pca = pca.fit_transform(num_vars_scaled)
+
+# Trama de los vectores de las variables y puntos de la variable categórica
+plt.figure(figsize=(10, 5))
+
+# Agregar puntos de clase G1 (azul)
+plt.scatter(num_vars_pca[:28, 0], num_vars_pca[0:28, 1], label='G1', color='blue')
+
+# Agregar puntos de clase G2 (naranja)
+plt.scatter(num_vars_pca[28:56, 0], num_vars_pca[28:56, 1], label='G2', color='orange')
+
+# Agregar puntos de clase G3 (morado)
+plt.scatter(num_vars_pca[56:, 0], num_vars_pca[56:, 1], label='G3', color='purple')
+
+for i, variable in enumerate(df.columns[1:]):
+    plt.arrow(0, 0, pca.components_[0][i], pca.components_[1][i], color='black', width=0.001)
+    plt.annotate(variable, (pca.components_[0][i], pca.components_[1][i]), fontsize=7)
+plt.legend()
+
+# Ajustar los límites de los ejes
+plt.xlim((-10, 10))
+plt.ylim((-10, 10))
+
+# Mostrar la parcela
+plt.show()
+
+# Imprimir las variables con mayor peso en cada componente principal
+for i in range(4):
+    component = f'Componente principal {i+1}: '
+    top_vars = [df.columns[1:][j] for j in np.argsort(abs(pca.components_[i]))[::-1][:4]]
+    print(component + str(top_vars))
+# Dividir en variable categórica y variables numéricas
+for g in ['G1','G2','G3']:
+    dE = df[df['Equipo']==g]
+    cat_var = dE.iloc[:, 0].values
+    num_vars = dE.iloc[:, 1:].values
+
+    # Normalizar los datos
+    scaler = StandardScaler()
+    num_vars_scaled = scaler.fit_transform(num_vars)
+
+    # Realizar la PCA con 4 componentes principales según el método del codo
+    pca = PCA(n_components=4)
+    num_vars_pca = pca.fit_transform(num_vars_scaled)
+
+
+    # Imprimir las variables con mayor peso en cada componente principal  // sólo guarda PC1
+    for i in range(1):
+        component = f'Componente principal {i+1} para los equipo en el grupo {g}: '
+        top_vars = [dE.columns[1:][j] for j in np.argsort(abs(pca.components_[i]))[::-1][:4]]
+        print(component + str(top_vars) + ' con cargas ' + str(pca.components_[i][np.argsort(abs(pca.components_[i]))[::-1][:4]]))
+        
+        # dataframe con variables y carga (sólo PC1)
+        pc_load=pd.DataFrame(data=pca.components_[0],index=dE.columns[1:],columns=['carga'])
+        pc_load = pc_load.sort_values(by='carga',ascending=False)
+        pc_load.to_excel('BDL-loadPC1-'+ g + '.xlsx')
