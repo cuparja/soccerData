@@ -1,6 +1,5 @@
 library(readxl)
 
-
 # Guardar los datos en txt de la Regresión
 
 
