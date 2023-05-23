@@ -1,10 +1,10 @@
 library(readxl)
-library(ggplot2)
 
-# Guardar los datos en txt de la Regresión y los plots en PDF
 
-pdf("C:\\Users\\cubo8\\OneDrive\\Escritorio\\RegresionGruposLaLigaonDifxG.pdf")
-sink("C:\\Users\\cubo8\\OneDrive\\Escritorio\\RegresionGruposLaLigaDifxG.txt")
+# Guardar los datos en txt de la Regresión
+
+
+sink("C:\\Users\\cubo8\\OneDrive\\Escritorio\\RegresionGruposLaLigaxG.txt")
 
 
 # Leer el archivo xlsx y asignar los datos a un data frame
@@ -12,21 +12,13 @@ datos <- read_excel("C:\\Users\\cubo8\\OneDrive\\Escritorio\\Regresion_Multiple_
 
 # Realizar el análisis de regresión
 modelo <- lm(DifGoles ~ SoT + G90 + GA90 + GCA, data = datos) #Modelo de regresión Múltiple para uno de los grupos 
-                                                              # de la Bundesliga y una de las 7 variables respuesta
+                                                              # de la LaLiga y una de las 5 variables respuesta
 # Mostrar los resultados del modelo
 summary(modelo)
-
-
-# Gráfico de diagnóstico de residuos
-plot(modelo, which=1)
-
-# Gráfico Normal Q-Q 
-plot(modelo, which=2)
-
 
 
 # Descargar los datos
 
 sink()
-dev.off()
+
 
