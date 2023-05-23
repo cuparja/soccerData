@@ -51,14 +51,14 @@ plt.scatter(num_vars_pca[28:56, 0], num_vars_pca[28:56, 1], label='G2', color='o
 # Agregar puntos de clase G3 (morado)
 plt.scatter(num_vars_pca[56:, 0], num_vars_pca[56:, 1], label='G3', color='purple')
 
-for i, variable in enumerate(df.columns[1:]):
-    plt.arrow(0, 0, pca.components_[0][i], pca.components_[1][i], color='black', width=0.001)
-    plt.annotate(variable, (pca.components_[0][i], pca.components_[1][i]), fontsize=7)
+
 plt.legend()
 
-# Ajustar los límites de los ejes
+# Ajustar los límites de los ejes y poner los títulos
 plt.xlim((-10, 10))
 plt.ylim((-10, 10))
+plt.xlabel("PCA1")
+plt.ylabel("PCA2")
 
 # Mostrar la parcela
 plt.show()
@@ -83,7 +83,7 @@ for g in ['G1','G2','G3']:
     num_vars_pca = pca.fit_transform(num_vars_scaled)
 
 
-    # Imprimir las variables con mayor peso en cada componente principal  // sólo guarda PC1
+    # Imprimir las variables con mayor peso en cada componente principal  // sólo guarda PCA1
     for i in range(1):
         component = f'Componente principal {i+1} para los equipo en el grupo {g}: '
         top_vars = [dE.columns[1:][j] for j in np.argsort(abs(pca.components_[i]))[::-1][:4]]
