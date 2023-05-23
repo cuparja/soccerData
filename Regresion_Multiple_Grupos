@@ -2,9 +2,7 @@ library(readxl)
 
 # Guardar los datos en txt de la Regresión
 
-
 sink("C:\\Users\\cubo8\\OneDrive\\Escritorio\\RegresionGruposLaLigaxG.txt")
-
 
 # Leer el archivo xlsx y asignar los datos a un data frame
 datos <- read_excel("C:\\Users\\cubo8\\OneDrive\\Escritorio\\Regresion_Multiple_Grupos.xlsx", sheet=1)
@@ -14,7 +12,6 @@ modelo <- lm(DifGoles ~ SoT + G90 + GA90 + GCA, data = datos) #Modelo de regresi
                                                               # de la LaLiga y una de las 5 variables respuesta
 # Mostrar los resultados del modelo
 summary(modelo)
-
 
 # Descargar los datos
 
